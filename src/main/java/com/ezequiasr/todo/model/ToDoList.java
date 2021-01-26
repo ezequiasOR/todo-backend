@@ -30,6 +30,14 @@ public class ToDoList {
 		this.name = name;
 	}
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -46,4 +54,7 @@ public class ToDoList {
 		this.toDos = toDos;
 	}
 	
+	public void addToDo(ToDo toDo) {
+		this.toDos.add(toDo);
+	}
 }

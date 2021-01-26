@@ -26,30 +26,31 @@ public class ToDoController {
 	@Autowired
 	private ToDoService toDoService;
 	
-	@RequestMapping(value = "/todo", method = RequestMethod.POST)
-	public ToDo save(@RequestBody ToDo entity) throws IOException {
-		return toDoService.save(entity);
+	@RequestMapping(value = "/list/{id}/todo", method = RequestMethod.POST)
+	public ToDo save(@PathVariable("id") long idList, @RequestBody ToDo entity) throws IOException {
+		return toDoService.save(idList, entity);
 	}
 	
-	@RequestMapping(value = "/todo", method = RequestMethod.GET)
-	public List<ToDo> getAll() {
-		return toDoService.getAll();
+	@RequestMapping(value = "/list/{id}/todo", method = RequestMethod.GET)
+	public List<ToDo> getAll(@PathVariable("id") long idList) {
+		return toDoService.getAll(idList);
 	}
 	
-	@RequestMapping(value = "/todo/{id}", method = RequestMethod.GET)
-	public ToDo getById(@PathVariable("id") long id) {
-		return toDoService.getById(id);
+	@RequestMapping(value = "/list/{idList}/todo/{idToDo}", method = RequestMethod.GET)
+	public ToDo getById(@PathVariable("idList") long idList, @PathVariable("idToDo") long idToDo) {
+		return toDoService.getById(idList, idToDo);
 	}
 	
-	@RequestMapping(value = "/todo/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<ToDo> update(@PathVariable("id") long id, @RequestBody ToDo toDo) throws IOException {
-		ToDo updatedToDo = toDoService.update(id, toDo);
+	@RequestMapping(value = "/list/{idList}/todo/{idToDo}", method = RequestMethod.PUT)
+	public ResponseEntity<ToDo> update(@PathVariable("idList") long idList, @PathVariable("idToDo") long idToDo,
+			@RequestBody ToDo toDo) throws IOException {
+		ToDo updatedToDo = toDoService.update(idList, idToDo, toDo);
 		return new ResponseEntity<ToDo>(updatedToDo, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/todo/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<ToDo> delete(@PathVariable("id") long id) {
-		ToDo toDo = toDoService.delete(id);
+	@RequestMapping(value = "/list/{idList}/todo/{idToDo}", method = RequestMethod.DELETE)
+	public ResponseEntity<ToDo> delete(@PathVariable("idList") long idList, @PathVariable("idToDo") long idToDo) {
+		ToDo toDo = toDoService.delete(idList, idToDo);
 		return new ResponseEntity<ToDo>(toDo, HttpStatus.OK);
 	}
 	

@@ -2,13 +2,13 @@ package com.ezequiasr.todo.service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ezequiasr.todo.exception.RegisterNotFoundException;
 import com.ezequiasr.todo.model.ToDo;
+import com.ezequiasr.todo.model.ToDoList;
 import com.ezequiasr.todo.repository.ToDoRepository;
 
 @Service
@@ -18,48 +18,52 @@ public class ToDoService {
 	
 	@Autowired
 	private ToDoRepository toDoRepository;
+	
+	@Autowired
+	private ToDoListService toDoListService;
 
-	public ToDo save(ToDo toDo) throws IOException {
+	public ToDo save(Long idList, ToDo toDo) throws IOException {
+		toDoListService.addToDo(idList, toDo);
 		toDoRepository.save(toDo);
 		return toDo;
 	}
 	
-	public List<ToDo> getAll() {
-		return toDoRepository.findAll();
+	public List<ToDo> getAll(Long idList) {
+		ToDoList toDoList = toDoListService.getById(idList);
+		return toDoList.getToDos();
 	}
 
-	public ToDo getById(long id) {
-		Optional<ToDo> optToDo = toDoRepository.findById(id);
+	public ToDo getById(Long idList, Long idToDo) {
+		ToDo toDo = toDoListService.findToDoById(idList, idToDo);
 		
-		if (!optToDo.isPresent()) {
+		if (toDo == null) {
 			throw new RegisterNotFoundException(errorMessage);
 		}
 		
-		return optToDo.get();
+		return toDo;
 	}
 	
-	public ToDo update(long id, ToDo toDo) throws IOException {
-		Optional<ToDo> optToDo = toDoRepository.findById(id);
+	public ToDo update(Long idList, Long idToDo, ToDo toDo) throws IOException {
+		ToDo newToDo = toDoListService.findToDoById(idList, idToDo);
 		
-		if (!optToDo.isPresent()) {
+		if (newToDo == null) {
 			throw new RegisterNotFoundException(errorMessage);
 		}
 		
-		ToDo newToDo = optToDo.get();
 		newToDo.setDescription(toDo.getDescription());
 		
 		toDoRepository.save(newToDo);
 		return newToDo;
 	}
 	
-	public ToDo delete(long id) {
-		Optional<ToDo> optToDo = toDoRepository.findById(id);
+	public ToDo delete(Long idList, Long idToDo) {
+		ToDo toDo = toDoListService.findToDoById(idList, idToDo);
 		
-		if (!optToDo.isPresent()) {
+		if (toDo == null) {
 			throw new RegisterNotFoundException(errorMessage);
 		}
 		
-		ToDo toDo = optToDo.get();
+		toDoListService.deleteToDo(idList, toDo);
 		
 		toDoRepository.delete(toDo);
 		return toDo;

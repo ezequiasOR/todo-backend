@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ezequiasr.todo.exception.RegisterNotFoundException;
+import com.ezequiasr.todo.model.ToDo;
 import com.ezequiasr.todo.model.ToDoList;
 import com.ezequiasr.todo.repository.ToDoListRepository;
 
@@ -63,6 +64,48 @@ public class ToDoListService {
 		toDoListRepository.delete(toDoList);
 		return toDoList;
 	}
-	
-	
+
+	public void addToDo(Long idList, ToDo toDo) {
+		Optional<ToDoList> optToDoList = toDoListRepository.findById(idList);
+		
+		if (!optToDoList.isPresent()) {
+			throw new RegisterNotFoundException(errorMessage);
+		}
+		
+		ToDoList toDoList = optToDoList.get();
+		
+		toDoList.addToDo(toDo);
+	}
+
+	public ToDo findToDoById(Long idList, Long idToDo) {
+		Optional<ToDoList> optToDoList = toDoListRepository.findById(idList);
+		
+		if (!optToDoList.isPresent()) {
+			throw new RegisterNotFoundException(errorMessage);
+		}
+		
+		ToDoList toDoList = optToDoList.get();
+		
+		for (ToDo toDo : toDoList.getToDos()) {
+			if (toDo.getId() == idToDo) {
+				return toDo;
+			}
+		}
+		
+		return null;
+	}
+
+	public void deleteToDo(Long idList, ToDo toDo) {
+		Optional<ToDoList> optToDoList = toDoListRepository.findById(idList);
+		
+		if (!optToDoList.isPresent()) {
+			throw new RegisterNotFoundException(errorMessage);
+		}
+		
+		ToDoList toDoList = optToDoList.get();
+		
+		if (toDoList.getToDos().contains(toDo)) {
+			toDoList.getToDos().remove(toDo);
+		}
+	}
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ezequiasr.todo.exception.RegisterNotFoundException;
 import com.ezequiasr.todo.exception.UserAlreadyExistException;
+import com.ezequiasr.todo.model.ToDoList;
 import com.ezequiasr.todo.model.User;
 import com.ezequiasr.todo.repository.UserRepository;
 
@@ -71,4 +72,49 @@ public class UserService {
 		userRepository.delete(user);
 		return user;
 	}
+
+	public void addToDoList(Long userId, ToDoList toDoList) {
+		Optional<User> optUser = userRepository.findById(userId);
+		
+		if (!optUser.isPresent()) {
+			throw new RegisterNotFoundException(errorMessage);
+		}
+		
+		User user = optUser.get();
+		
+		user.addToDoList(toDoList);
+	}
+
+	public ToDoList findListById(Long userId, Long listId) {
+		Optional<User> optUser = userRepository.findById(userId);
+		
+		if (!optUser.isPresent()) {
+			throw new RegisterNotFoundException(errorMessage);
+		}
+		
+		User user = optUser.get();
+		
+		for (ToDoList toDoList : user.getLists()) {
+			if (toDoList.getId() == listId) {
+				return toDoList;
+			}
+		}
+		
+		return null;
+	}
+	
+	public void deleteList(Long userId, ToDoList toDoList) {
+		Optional<User> optUser = userRepository.findById(userId);
+		
+		if (!optUser.isPresent()) {
+			throw new RegisterNotFoundException(errorMessage);
+		}
+		
+		User user = optUser.get();
+		
+		if (user.getLists().contains(toDoList)) {
+			user.getLists().remove(toDoList);
+		}
+	}
+
 }

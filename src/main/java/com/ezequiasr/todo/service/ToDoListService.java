@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ezequiasr.todo.exception.RegisterNotFoundException;
 import com.ezequiasr.todo.model.ToDo;
 import com.ezequiasr.todo.model.ToDoList;
+import com.ezequiasr.todo.model.User;
 import com.ezequiasr.todo.repository.ToDoListRepository;
 
 @Service
@@ -19,13 +20,18 @@ public class ToDoListService {
 	@Autowired
 	private ToDoListRepository toDoListRepository;
 
-	public ToDoList save(ToDoList toDoList) {
+	@Autowired
+	private UserService userService;
+	
+	public ToDoList save(Long userId, ToDoList toDoList) {
+		userService.addToDoList(userId, toDoList);
 		toDoListRepository.save(toDoList);
 		return toDoList;
 	}
 
-	public List<ToDoList> getAll() {
-		return toDoListRepository.findAll();
+	public List<ToDoList> getAll(Long userId) {
+		User user = userService.getById(userId);
+		return user.getLists();
 	}
 
 	public ToDoList getById(long id) {
@@ -52,14 +58,14 @@ public class ToDoListService {
 		return newToDoList;
 	}
 
-	public ToDoList delete(long id) {
-		Optional<ToDoList> optToDoList = toDoListRepository.findById(id);
+	public ToDoList delete(Long userId, Long listId) {
+		ToDoList toDoList = userService.findListById(userId, listId);
 		
-		if (!optToDoList.isPresent()) {
+		if (toDoList == null) {
 			throw new RegisterNotFoundException(errorMessage);
 		}
 		
-		ToDoList toDoList = optToDoList.get();
+		userService.deleteList(userId, toDoList);
 		
 		toDoListRepository.delete(toDoList);
 		return toDoList;

@@ -73,4 +73,8 @@ public class User {
 	public void setLists(List<ToDoList> lists) {
 		this.lists = lists;
 	}
+
+	public void addToDoList(ToDoList toDoList) {
+		this.lists.add(toDoList);
+	}
 }

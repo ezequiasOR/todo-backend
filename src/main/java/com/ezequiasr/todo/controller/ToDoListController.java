@@ -26,14 +26,14 @@ public class ToDoListController {
 	@Autowired
 	private ToDoListService toDoListService;
 	
-	@RequestMapping(value = "/list", method = RequestMethod.POST)
-	private ToDoList save(@RequestBody ToDoList toDoList) throws IOException {
-		return toDoListService.save(toDoList);
+	@RequestMapping(value = "user/{userId}/list", method = RequestMethod.POST)
+	private ToDoList save(@PathVariable("userId") long userId, @RequestBody ToDoList toDoList) throws IOException {
+		return toDoListService.save(userId, toDoList);
 	}
 	
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public List<ToDoList> getAll() {
-		return toDoListService.getAll();
+	@RequestMapping(value = "user/{userId}/list", method = RequestMethod.GET)
+	public List<ToDoList> getAll(@PathVariable("userId") long userId) {
+		return toDoListService.getAll(userId);
 	}
 	
 	@RequestMapping(value = "/list/{id}", method = RequestMethod.GET)
@@ -47,9 +47,10 @@ public class ToDoListController {
 		return new ResponseEntity<ToDoList>(updatedToDoList, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/list/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<ToDoList> delete(@PathVariable("id") long id) {
-		ToDoList toDoList = toDoListService.delete(id);
+	@RequestMapping(value = "user/{userId}/list/{listId}", method = RequestMethod.DELETE)
+	public ResponseEntity<ToDoList> delete(@PathVariable("userId") long userId, @PathVariable("listId") long listId) {
+		ToDoList toDoList = toDoListService.delete(userId, listId);
 		return new ResponseEntity<ToDoList>(toDoList, HttpStatus.OK);
 	}
+	
 }

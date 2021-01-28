@@ -2,6 +2,7 @@ package com.ezequiasr.todo.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,23 +34,24 @@ public class ToDoService {
 		return toDoList.getToDos();
 	}
 
-	public ToDo getById(Long idList, Long idToDo) {
-		ToDo toDo = toDoListService.findToDoById(idList, idToDo);
+	public ToDo getById(Long toDoId) {
+		Optional<ToDo> optToDo = toDoRepository.findById(toDoId);
 		
-		if (toDo == null) {
+		if (!optToDo.isPresent()) {
 			throw new RegisterNotFoundException(errorMessage);
 		}
 		
-		return toDo;
+		return optToDo.get();
 	}
 	
-	public ToDo update(Long idList, Long idToDo, ToDo toDo) throws IOException {
-		ToDo newToDo = toDoListService.findToDoById(idList, idToDo);
+	public ToDo update(Long toDoId, ToDo toDo) throws IOException {
+		Optional<ToDo> optToDo = toDoRepository.findById(toDoId);
 		
-		if (newToDo == null) {
+		if (!optToDo.isPresent()) {
 			throw new RegisterNotFoundException(errorMessage);
 		}
 		
+		ToDo newToDo = optToDo.get();
 		newToDo.setDescription(toDo.getDescription());
 		
 		toDoRepository.save(newToDo);

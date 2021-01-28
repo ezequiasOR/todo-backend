@@ -34,8 +34,8 @@ public class ToDoListService {
 		return user.getLists();
 	}
 
-	public ToDoList getById(long id) {
-		Optional<ToDoList> optToDoList = toDoListRepository.findById(id);
+	public ToDoList getById(Long listId) {
+		Optional<ToDoList> optToDoList = toDoListRepository.findById(listId);
 		
 		if (!optToDoList.isPresent()) {
 			throw new RegisterNotFoundException(errorMessage);
@@ -44,8 +44,8 @@ public class ToDoListService {
 		return optToDoList.get();
 	}
 
-	public ToDoList update(long id, ToDoList toDoList) {
-		Optional<ToDoList> optToDoList = toDoListRepository.findById(id);
+	public ToDoList update(Long listId, ToDoList toDoList) {
+		Optional<ToDoList> optToDoList = toDoListRepository.findById(listId);
 		
 		if (!optToDoList.isPresent()) {
 			throw new RegisterNotFoundException(errorMessage);

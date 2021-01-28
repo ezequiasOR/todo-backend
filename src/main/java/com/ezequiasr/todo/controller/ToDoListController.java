@@ -26,28 +26,28 @@ public class ToDoListController {
 	@Autowired
 	private ToDoListService toDoListService;
 	
-	@RequestMapping(value = "user/{userId}/list", method = RequestMethod.POST)
+	@RequestMapping(value = "/user/{userId}/list", method = RequestMethod.POST)
 	private ToDoList save(@PathVariable("userId") long userId, @RequestBody ToDoList toDoList) throws IOException {
 		return toDoListService.save(userId, toDoList);
 	}
 	
-	@RequestMapping(value = "user/{userId}/list", method = RequestMethod.GET)
+	@RequestMapping(value = "/user/{userId}/list", method = RequestMethod.GET)
 	public List<ToDoList> getAll(@PathVariable("userId") long userId) {
 		return toDoListService.getAll(userId);
 	}
 	
-	@RequestMapping(value = "/list/{id}", method = RequestMethod.GET)
-	public ToDoList getById(@PathVariable("id") long id) {
-		return toDoListService.getById(id);
+	@RequestMapping(value = "/list/{listId}", method = RequestMethod.GET)
+	public ToDoList getById(@PathVariable("listId") long listId) {
+		return toDoListService.getById(listId);
 	}
 	
-	@RequestMapping(value = "/list/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<ToDoList> update(@PathVariable("id") long id, @RequestBody ToDoList toDoList) throws IOException {
-		ToDoList updatedToDoList = toDoListService.update(id, toDoList);
+	@RequestMapping(value = "/list/{listId}", method = RequestMethod.PUT)
+	public ResponseEntity<ToDoList> update(@PathVariable("listId") long listId, @RequestBody ToDoList toDoList) throws IOException {
+		ToDoList updatedToDoList = toDoListService.update(listId, toDoList);
 		return new ResponseEntity<ToDoList>(updatedToDoList, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "user/{userId}/list/{listId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/user/{userId}/list/{listId}", method = RequestMethod.DELETE)
 	public ResponseEntity<ToDoList> delete(@PathVariable("userId") long userId, @PathVariable("listId") long listId) {
 		ToDoList toDoList = toDoListService.delete(userId, listId);
 		return new ResponseEntity<ToDoList>(toDoList, HttpStatus.OK);

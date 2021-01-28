@@ -10,7 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity(name = "users")
 public class User {
@@ -25,6 +26,7 @@ public class User {
 	@Column(unique = true, nullable = false)
 	private String email;
 	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(nullable = false)
 	private String password;
 
@@ -40,6 +42,14 @@ public class User {
 		this.name = name;
 		this.email = email;
 		this.password = password;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getName() {

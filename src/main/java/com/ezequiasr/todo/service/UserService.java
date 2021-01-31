@@ -27,8 +27,9 @@ public class UserService {
 			throw new UserAlreadyExistException();
 		}
 		
-		userRepository.save(user);
-		return user;
+		User newUser = new User(user.getName(), user.getEmail(), user.getPassword());
+		userRepository.save(newUser);
+		return newUser;
 	}
 
 	public List<User> getAll() {

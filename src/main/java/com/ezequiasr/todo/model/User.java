@@ -10,12 +10,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.ezequiasr.todo.enums.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity(name = "users")
 public class User {
-	
+	private Role role;
 	@Id
 	@GeneratedValue
 	private long id;
@@ -30,18 +31,26 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 
+	
+	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<ToDoList> lists = new ArrayList<>();
 	
 	public User() {
 		this.id = 0;
+//		this.role = Role.USER;
 	}
-
+	
 	public User(String name, String email, String password) {
 		super();
 		this.name = name;
 		this.email = email;
 		this.password = password;
+		if (email.equals("ezequias.rocha9@gmail.com")) {
+			this.role = Role.ADMIN;
+		} else {
+			this.role = Role.USER;
+		}
 	}
 
 	public long getId() {
@@ -74,6 +83,14 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	public List<ToDoList> getLists() {

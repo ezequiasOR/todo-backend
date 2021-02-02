@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ezequiasr.todo.dto.UserSignup;
 import com.ezequiasr.todo.model.User;
 import com.ezequiasr.todo.service.UserService;
 
@@ -26,8 +28,8 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@RequestMapping(value = "/user", method = RequestMethod.POST)
-	private User save(@RequestBody User user) throws IOException {
+	@RequestMapping(value = "/signup", method = RequestMethod.POST)
+	private User save(@RequestBody UserSignup user) throws IOException {
 		return userService.save(user);
 	}
 	

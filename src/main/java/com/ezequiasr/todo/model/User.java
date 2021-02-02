@@ -1,11 +1,17 @@
 package com.ezequiasr.todo.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -16,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity(name = "users")
 public class User {
-	private Role role;
+	
 	@Id
 	@GeneratedValue
 	private long id;
@@ -25,31 +31,37 @@ public class User {
 	private String name;
 	
 	@Column(unique = true, nullable = false)
+	private String username;
+	
+	@Column(unique = true, nullable = false)
 	private String email;
 	
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(nullable = false)
 	private String password;
 
-	
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "roles")
+	private Set<Integer> roles = new HashSet<>();
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<ToDoList> lists = new ArrayList<>();
 	
 	public User() {
 		this.id = 0;
-//		this.role = Role.USER;
+//		this.roles.add(Role.USER.getId());
 	}
 	
-	public User(String name, String email, String password) {
+	public User(String name, String username, String email, String password) {
 		super();
 		this.name = name;
+		this.username = username;
 		this.email = email;
 		this.password = password;
 		if (email.equals("ezequias.rocha9@gmail.com")) {
-			this.role = Role.ADMIN;
+			this.roles.add(Role.ADMIN.getId());
 		} else {
-			this.role = Role.USER;
+			this.roles.add(Role.USER.getId());
 		}
 	}
 
@@ -69,6 +81,14 @@ public class User {
 		this.name = name;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	public String getEmail() {
 		return email;
 	}
@@ -85,12 +105,12 @@ public class User {
 		this.password = password;
 	}
 
-	public Role getRole() {
-		return role;
+	public List<Role> getRoles() {
+		return this.roles.stream().map(role -> Role.toEnum(role)).collect(Collectors.toList());
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setRoles(Set<Integer> roles) {
+		this.roles = roles;
 	}
 
 	public List<ToDoList> getLists() {

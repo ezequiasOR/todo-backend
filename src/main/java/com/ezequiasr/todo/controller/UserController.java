@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,17 +28,19 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
-	
+
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	private User save(@RequestBody UserSignup user) throws IOException {
+	@Transactional
+	public User save(@RequestBody UserSignup user) throws IOException {
 		return userService.save(user);
 	}
-	
+
+	@PreAuthorize("hasAnyAuthority('ADMIN')")
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public List<User> getAll() {
 		return userService.getAll();
 	}
-	
+
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
 	public User getById(@PathVariable("id") long id) {
 		return userService.getById(id);

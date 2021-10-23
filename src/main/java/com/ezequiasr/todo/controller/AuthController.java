@@ -20,7 +20,7 @@ import com.ezequiasr.todo.security.JwtProvider;
 @Controller
 @RestController
 @RequestMapping(value = "/")
-@CrossOrigin(origins = "+")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
 	@Autowired

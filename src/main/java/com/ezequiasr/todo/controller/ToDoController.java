@@ -20,7 +20,7 @@ import com.ezequiasr.todo.service.ToDoService;
 @Controller
 @RestController
 @RequestMapping(value = "/")
-@CrossOrigin(origins = "+")
+@CrossOrigin(origins = "*")
 public class ToDoController {
 
 	@Autowired

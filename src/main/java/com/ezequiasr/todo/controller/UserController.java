@@ -23,7 +23,7 @@ import com.ezequiasr.todo.service.UserService;
 @Controller
 @RestController
 @RequestMapping(value = "/")
-@CrossOrigin(origins = "+")
+@CrossOrigin(origins = "*")
 public class UserController {
 	
 	@Autowired

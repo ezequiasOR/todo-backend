@@ -25,13 +25,12 @@ import com.ezequiasr.todo.service.UserService;
 @RequestMapping(value = "/")
 @CrossOrigin(origins = "*")
 public class UserController {
-	
 	@Autowired
 	private UserService userService;
 
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	@Transactional
-	public User save(@RequestBody UserSignup user) throws IOException {
+	public User save(@RequestBody UserSignup user) {
 		return userService.save(user);
 	}
 
@@ -42,18 +41,18 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-	public User getById(@PathVariable("id") long id) {
+	public User getById(@PathVariable("id") Long id) {
 		return userService.getById(id);
 	}
-	
+
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<User> update(@PathVariable("id") long id, @RequestBody User user) throws IOException {
+	public ResponseEntity<User> update(@PathVariable("id") Long id, @RequestBody User user) {
 		User updatedUser = userService.update(id, user);
 		return new ResponseEntity<User>(updatedUser, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<User> delete(@PathVariable("id") long id) {
+	public ResponseEntity<User> delete(@PathVariable("id") Long id) {
 		User user = userService.delete(id);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}

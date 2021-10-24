@@ -1,6 +1,5 @@
 package com.ezequiasr.todo.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,32 +25,31 @@ public class ToDoController {
 	@Autowired
 	private ToDoService toDoService;
 	
-	@RequestMapping(value = "/list/{listId}/todo", method = RequestMethod.POST)
-	public ToDo save(@PathVariable("listId") long listId, @RequestBody ToDo toDo) throws IOException {
-		return toDoService.save(listId, toDo);
+	@RequestMapping(value = "/todo", method = RequestMethod.POST)
+	public ResponseEntity<ToDo> save(@RequestBody ToDo toDo) {
+		return new ResponseEntity<ToDo>(toDoService.save(toDo), HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(value = "/list/{listId}/todo", method = RequestMethod.GET)
-	public List<ToDo> getAll(@PathVariable("listId") long listId) {
-		return toDoService.getAll(listId);
+	public ResponseEntity<List<ToDo>> getAll(@PathVariable("listId") Long listId) {
+		return new ResponseEntity<List<ToDo>>(toDoService.getAll(listId), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/todo/{toDoId}", method = RequestMethod.GET)
-	public ToDo getById(@PathVariable("toDoId") long toDoId) {
-		return toDoService.getById(toDoId);
+	public ResponseEntity<ToDo> getById(@PathVariable("toDoId") Long toDoId) {
+		return new ResponseEntity<ToDo>(toDoService.getById(toDoId), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/todo/{toDoId}", method = RequestMethod.PUT)
-	public ResponseEntity<ToDo> update(@PathVariable("toDoId") long toDoId,
-			@RequestBody ToDo toDo) throws IOException {
+	public ResponseEntity<ToDo> update(@PathVariable("toDoId") Long toDoId,
+			@RequestBody ToDo toDo) {
 		ToDo updatedToDo = toDoService.update(toDoId, toDo);
 		return new ResponseEntity<ToDo>(updatedToDo, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/list/{listId}/todo/{toDoId}", method = RequestMethod.DELETE)
-	public ResponseEntity<ToDo> delete(@PathVariable("listId") long listId, @PathVariable("toDoId") long toDoId) {
-		ToDo toDo = toDoService.delete(listId, toDoId);
+	@RequestMapping(value = "/todo/{toDoId}", method = RequestMethod.DELETE)
+	public ResponseEntity<ToDo> delete(@PathVariable("toDoId") Long toDoId) {
+		ToDo toDo = toDoService.delete(toDoId);
 		return new ResponseEntity<ToDo>(toDo, HttpStatus.OK);
 	}
-	
 }

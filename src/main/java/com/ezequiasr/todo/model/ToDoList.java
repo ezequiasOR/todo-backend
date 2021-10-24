@@ -1,40 +1,34 @@
 package com.ezequiasr.todo.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 @Entity
 public class ToDoList {
-
 	@Id
 	@GeneratedValue
-	private long id;
-	
+	private Long id;
+
+	@Column(nullable = false)
 	private String name;
-	
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<ToDo> toDos = new ArrayList<>();
-	
+
+	@Column(nullable = false)
+	private Long userId;
+
 	public ToDoList() {
-		this.id = 0;
+		this.id = Long.valueOf(0);
 	}
 
-	public ToDoList(String name) {
+	public ToDoList(String name, Long userId) {
 		super();
 		this.name = name;
+		this.userId = userId;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -46,15 +40,11 @@ public class ToDoList {
 		this.name = name;
 	}
 
-	public List<ToDo> getToDos() {
-		return toDos;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setToDos(List<ToDo> toDos) {
-		this.toDos = toDos;
-	}
-	
-	public void addToDo(ToDo toDo) {
-		this.toDos.add(toDo);
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 }

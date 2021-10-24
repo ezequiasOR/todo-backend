@@ -1,6 +1,5 @@
 package com.ezequiasr.todo.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,30 +26,30 @@ public class ToDoListController {
 	private ToDoListService toDoListService;
 	
 	@RequestMapping(value = "/user/{userId}/list", method = RequestMethod.POST)
-	private ToDoList save(@PathVariable("userId") long userId, @RequestBody ToDoList toDoList) throws IOException {
-		return toDoListService.save(userId, toDoList);
+	private ResponseEntity<ToDoList> save(@PathVariable("userId") Long userId, @RequestBody ToDoList toDoList) {
+		return new ResponseEntity<ToDoList>(toDoListService.save(userId, toDoList), HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(value = "/user/{userId}/list", method = RequestMethod.GET)
-	public List<ToDoList> getAll(@PathVariable("userId") long userId) {
-		return toDoListService.getAll(userId);
+	public ResponseEntity<List<ToDoList>> getAll(@PathVariable("userId") Long userId) {
+		return new ResponseEntity<List<ToDoList>>(toDoListService.getAllUserLists(userId), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/list/{listId}", method = RequestMethod.GET)
-	public ToDoList getById(@PathVariable("listId") long listId) {
+	public ToDoList getById(@PathVariable("listId") Long listId) {
 		return toDoListService.getById(listId);
 	}
 	
 	@RequestMapping(value = "/list/{listId}", method = RequestMethod.PUT)
-	public ResponseEntity<ToDoList> update(@PathVariable("listId") long listId, @RequestBody ToDoList toDoList) throws IOException {
+	public ResponseEntity<ToDoList> update(@PathVariable("listId") Long listId, @RequestBody ToDoList toDoList) {
 		ToDoList updatedToDoList = toDoListService.update(listId, toDoList);
 		return new ResponseEntity<ToDoList>(updatedToDoList, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/user/{userId}/list/{listId}", method = RequestMethod.DELETE)
-	public ResponseEntity<ToDoList> delete(@PathVariable("userId") long userId, @PathVariable("listId") long listId) {
-		ToDoList toDoList = toDoListService.delete(userId, listId);
-		return new ResponseEntity<ToDoList>(toDoList, HttpStatus.OK);
+	@RequestMapping(value = "/list/{listId}", method = RequestMethod.DELETE)
+	public ResponseEntity<ToDoList> delete(@PathVariable("listId") Long listId) {
+		ToDoList list = toDoListService.delete(listId);
+		return new ResponseEntity<ToDoList>(list, HttpStatus.OK);
 	}
 	
 }

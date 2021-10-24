@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.ezequiasr.todo.dto.UserSignup;
 import com.ezequiasr.todo.exception.RegisterNotFoundException;
 import com.ezequiasr.todo.exception.UserAlreadyExistException;
-import com.ezequiasr.todo.model.ToDoList;
 import com.ezequiasr.todo.model.User;
 import com.ezequiasr.todo.repository.UserRepository;
 
@@ -45,7 +44,7 @@ public class UserService {
 		return userRepository.findAll();
 	}
 
-	public User getById(long id) {
+	public User getById(Long id) {
 		Optional<User> optUser = userRepository.findById(id);
 		
 		if(!optUser.isPresent()) {
@@ -55,7 +54,7 @@ public class UserService {
 		return optUser.get();
 	}
 
-	public User update(long id, User user) {
+	public User update(Long id, User user) {
 		Optional<User> optUser = userRepository.findById(id);
 		
 		if(!optUser.isPresent()) {
@@ -64,13 +63,13 @@ public class UserService {
 	
 		User newUser = optUser.get();
 		newUser.setName(user.getName());
-		newUser.setPassword(user.getPassword());
+		newUser.setPassword(encoder.encode(user.getPassword()));
 		
 		userRepository.save(newUser);
 		return newUser;
 	}
 
-	public User delete(long id) {
+	public User delete(Long id) {
 		Optional<User> optUser = userRepository.findById(id);
 		
 		if(!optUser.isPresent()) {
@@ -78,53 +77,7 @@ public class UserService {
 		}
 		
 		User user = optUser.get();
-		
 		userRepository.delete(user);
 		return user;
 	}
-
-	public void addToDoList(Long userId, ToDoList toDoList) {
-		Optional<User> optUser = userRepository.findById(userId);
-		
-		if (!optUser.isPresent()) {
-			throw new RegisterNotFoundException(errorMessage);
-		}
-		
-		User user = optUser.get();
-		
-		user.addToDoList(toDoList);
-	}
-
-	public ToDoList findListById(Long userId, Long listId) {
-		Optional<User> optUser = userRepository.findById(userId);
-		
-		if (!optUser.isPresent()) {
-			throw new RegisterNotFoundException(errorMessage);
-		}
-		
-		User user = optUser.get();
-		
-		for (ToDoList toDoList : user.getLists()) {
-			if (toDoList.getId() == listId) {
-				return toDoList;
-			}
-		}
-		
-		return null;
-	}
-	
-	public void deleteList(Long userId, ToDoList toDoList) {
-		Optional<User> optUser = userRepository.findById(userId);
-		
-		if (!optUser.isPresent()) {
-			throw new RegisterNotFoundException(errorMessage);
-		}
-		
-		User user = optUser.get();
-		
-		if (user.getLists().contains(toDoList)) {
-			user.getLists().remove(toDoList);
-		}
-	}
-
 }

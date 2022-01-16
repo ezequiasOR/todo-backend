@@ -1,12 +1,10 @@
 package com.ezequiasr.todo.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -14,7 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import com.ezequiasr.todo.enums.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,20 +19,19 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity(name = "users")
 public class User {
-	
 	@Id
 	@GeneratedValue
-	private long id;
-	
+	private Long id;
+
 	@Column(nullable = false)
 	private String name;
-	
+
 	@Column(unique = true, nullable = false)
 	private String username;
-	
+
 	@Column(unique = true, nullable = false)
 	private String email;
-	
+
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(nullable = false)
 	private String password;
@@ -43,13 +39,9 @@ public class User {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "roles")
 	private Set<Integer> roles = new HashSet<>();
-	
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<ToDoList> lists = new ArrayList<>();
-	
+
 	public User() {
-		this.id = 0;
-//		this.roles.add(Role.USER.getId());
+		this.id = Long.valueOf(0);
 	}
 	
 	public User(String name, String username, String email, String password) {
@@ -65,11 +57,11 @@ public class User {
 		}
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -111,17 +103,5 @@ public class User {
 
 	public void setRoles(Set<Integer> roles) {
 		this.roles = roles;
-	}
-
-	public List<ToDoList> getLists() {
-		return lists;
-	}
-
-	public void setLists(List<ToDoList> lists) {
-		this.lists = lists;
-	}
-
-	public void addToDoList(ToDoList toDoList) {
-		this.lists.add(toDoList);
 	}
 }

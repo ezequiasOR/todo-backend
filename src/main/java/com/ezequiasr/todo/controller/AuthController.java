@@ -17,18 +17,22 @@ import com.ezequiasr.todo.dto.UserSignin;
 import com.ezequiasr.todo.security.JwtResponse;
 import com.ezequiasr.todo.security.JwtProvider;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RestController
 @RequestMapping(value = "/")
-@CrossOrigin(origins = "+")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
+
 	@Autowired
 	private JwtProvider jwtProvider;
-	
+
+
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
 	public ResponseEntity<?> authenticateUser(@RequestBody UserSignin loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(
@@ -37,10 +41,13 @@ public class AuthController {
 				loginRequest.getPassword()
 			)
 		);
-		
+
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
+
 		String jwt = jwtProvider.generateJwtToken(authentication);
-		return ResponseEntity.ok(new JwtResponse(jwt));
+		Map<String, Object> response = new HashMap<>();
+		response.put("user", authentication.getPrincipal());
+		response.put("token", new JwtResponse(jwt));
+		return ResponseEntity.ok(response);
 	}
 }
